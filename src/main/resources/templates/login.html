@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đăng nhập - JWT Demo</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body data-page="login">
+<main class="auth-shell">
+    <section class="card">
+        <p class="eyebrow">Spring Boot Security 6+</p>
+        <h1>JWT Authentication</h1>
+        <p class="subtitle">Đăng nhập để nhận Bearer token và gọi API được bảo vệ.</p>
+
+        <form id="loginForm" novalidate>
+            <label>Email
+                <input id="email" name="email" type="email" autocomplete="email" required
+                       placeholder="ban@example.com">
+            </label>
+            <label>Mật khẩu
+                <input id="password" name="password" type="password" autocomplete="current-password" required
+                       placeholder="Tối thiểu 6 ký tự">
+            </label>
+            <button type="submit">Đăng nhập</button>
+        </form>
+        <div id="message" class="message" aria-live="polite"></div>
+        <p class="switch-link">Chưa có tài khoản? <a href="/register">Đăng ký</a></p>
+    </section>
+</main>
+<script src="/js/main.js"></script>
+</body>
+</html>
