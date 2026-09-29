@@ -9,7 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import io.jsonwebtoken.JwtException;
+import com.example.security.exception.JwtTokenException;
+import com.example.security.exception.JwtTokenExpiredException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jwt.SignedJWT;
 
 class JwtServiceTests {
 
@@ -29,10 +32,11 @@ class JwtServiceTests {
     }
 
     @Test
-    void generatedTokenContainsUsernameAndIsValid() {
+    void generatedTokenContainsUsernameUsesHs256AndIsValid() throws Exception {
         String token = jwtService.generateToken(user);
 
         assertEquals("student@example.com", jwtService.extractUsername(token));
+        assertEquals(JWSAlgorithm.HS256, SignedJWT.parse(token).getHeader().getAlgorithm());
         assertTrue(jwtService.isTokenValid(token, user));
     }
 
@@ -42,6 +46,18 @@ class JwtServiceTests {
         char replacement = token.endsWith("a") ? 'b' : 'a';
         String tampered = token.substring(0, token.length() - 1) + replacement;
 
-        assertThrows(JwtException.class, () -> jwtService.extractUsername(tampered));
+        assertThrows(JwtTokenException.class, () -> jwtService.extractUsername(tampered));
+    }
+
+    @Test
+    void expiredTokenIsRejected() {
+        JwtService expiredTokenService = new JwtService(
+                "test-secret-key-with-at-least-thirty-two-bytes-2026",
+                -1,
+                "jwt-nimbus-test");
+        String token = expiredTokenService.generateToken(user);
+
+        assertThrows(JwtTokenExpiredException.class,
+                () -> expiredTokenService.extractUsername(token));
     }
 }

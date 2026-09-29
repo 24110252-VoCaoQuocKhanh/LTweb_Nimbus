@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.security.model.ApiError;
+import com.example.security.exception.JwtTokenException;
+import com.example.security.exception.JwtTokenExpiredException;
 import com.example.security.service.JwtService;
 import tools.jackson.databind.ObjectMapper;
 
@@ -21,8 +23,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -38,6 +38,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
         this.objectMapper = objectMapper;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return request.getServletPath().startsWith("/auth/");
     }
 
     @Override
@@ -66,9 +71,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request, response);
-        } catch (ExpiredJwtException exception) {
+        } catch (JwtTokenExpiredException exception) {
             writeUnauthorized(response, request, "JWT đã hết hạn");
-        } catch (JwtException | IllegalArgumentException | UsernameNotFoundException exception) {
+        } catch (JwtTokenException | IllegalArgumentException | UsernameNotFoundException exception) {
             writeUnauthorized(response, request, "JWT không hợp lệ");
         }
     }

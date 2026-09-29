@@ -11,7 +11,10 @@ async function api(path, options = {}) {
     const headers = new Headers(options.headers || {});
     headers.set("Content-Type", "application/json");
     const token = localStorage.getItem(TOKEN_KEY);
-    if (token) headers.set("Authorization", `Bearer ${token}`);
+    const isProtectedApi = path.startsWith("/users");
+    if (token && isProtectedApi) {
+        headers.set("Authorization", `Bearer ${token}`);
+    }
 
     const response = await fetch(path, {...options, headers});
     const body = response.status === 204 ? null : await response.json().catch(() => null);

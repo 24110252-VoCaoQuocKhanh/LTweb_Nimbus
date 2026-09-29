@@ -1,6 +1,6 @@
 # JWT Spring Boot + MySQL
 
-Ví dụ được triển khai theo bài giảng `04_JWT.pdf`: đăng ký, đăng nhập sinh JWT, JWT filter, Spring Security stateless, API người dùng, xử lý lỗi và giao diện AJAX. Phiên bản này dùng **JJWT 0.12.6** đúng với slide; Nimbus chưa được dùng trong yêu cầu hiện tại.
+Ví dụ được triển khai theo bài giảng `04_JWT.pdf`: đăng ký, đăng nhập sinh JWT, JWT filter, Spring Security stateless, API người dùng, xử lý lỗi và giao diện AJAX. Phần tạo chữ ký và xác thực token dùng **Nimbus JOSE + JWT 10.10** với thuật toán HS256, thay thế hoàn toàn JJWT.
 
 ## Cấu hình mặc định
 
